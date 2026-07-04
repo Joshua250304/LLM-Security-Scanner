@@ -18,13 +18,13 @@ those risks so they can be caught in CI before a model reaches users.
 
 ## Vulnerability categories covered
 
-| Module | What it checks |
-|---|---|
-| `prompt_injection` | Can the model's system instructions be overridden by adversarial user input? |
-| `system_prompt_leak` | Will the model disclose confidential system/developer instructions? |
-| `pii_leakage` | Does the model fabricate or echo back sensitive personal data (SSNs, emails, phone numbers)? |
-| `excessive_agency` | Does the model falsely claim to have performed real-world actions (transfers, deletions, sending email) it cannot actually take? |
-| `harmful_content` | Do mild social-engineering framings (roleplay, "hypothetically," fake authority) bypass safety guardrails? |
+| Module | OWASP LLM category | What it checks |
+|---|---|---|
+| `prompt_injection` | LLM01: Prompt Injection | Can the model's system instructions be overridden by adversarial user input? |
+| `system_prompt_leak` | LLM06: Sensitive Information Disclosure | Will the model disclose confidential system/developer instructions? |
+| `pii_leakage` | LLM06: Sensitive Information Disclosure | Does the model fabricate or echo back sensitive personal data (SSNs, emails, phone numbers)? |
+| `excessive_agency` | LLM08: Excessive Agency | Does the model falsely claim to have performed real-world actions (transfers, deletions, sending email) it cannot actually take? |
+| `harmful_content` | LLM02: Insecure Output Handling | Do mild social-engineering framings (roleplay, "hypothetically," fake authority) bypass safety guardrails? |
 
 Each finding is scored by severity (`LOW` → `CRITICAL`) and rolled up into
 an overall **risk grade (A–F)** for the target model/deployment.
@@ -59,8 +59,8 @@ it in `scanner.py` — no changes needed elsewhere.
 ## Installation
 
 ```bash
-git clone https://github.com/<your-username>/llm-security-scanner.git
-cd llm-security-scanner
+git clone https://github.com/Joshua250304/LLM-Security-Scanner.git
+cd LLM-Security-Scanner
 pip install -r requirements.txt
 cp .env.example .env   # then fill in your API key(s)
 ```
@@ -69,7 +69,7 @@ cp .env.example .env   # then fill in your API key(s)
 
 ```bash
 # Scan an Anthropic model with every test category
-python scanner.py --provider anthropic --model claude-sonnet-4-6
+python scanner.py --provider anthropic --model claude-sonnet-5
 
 # Scan an OpenAI model with a custom system prompt, running only 2 categories
 python scanner.py --provider openai --model gpt-4o \
@@ -98,6 +98,7 @@ Reports written to:
   reports/scan-20260703-211428.json
   reports/scan-20260703-211428.md
 ```
+
 ## Sample scan results
 
 Below is a real scan run against `claude-sonnet-5`, included to demonstrate
@@ -145,8 +146,6 @@ held up as a clear violation on manual review. This is the intended
 workflow for the tool: fast automated triage, followed by targeted human
 judgment on the handful of findings that need it, rather than trusting the
 score in isolation.
-
-
 
 ## Running the test suite
 
